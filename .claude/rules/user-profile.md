@@ -4,9 +4,10 @@
 
 ### 最重要: 生成AI/LLMの実践活用
 - コーディングエージェント（Claude Code、Codex等）の使いこなし・ワークフロー設計
+- **Claude Code Agent Teams**: マルチエージェント構成、役割分離、オーケストレーション実践
 - エージェント設計パターン、マルチエージェント、並列エージェント
-- ローカルLLM（GPU不要での実行、Ollama、RAG構築）
-- 各モデルの性能比較と使い分け（Claude vs GPT vs OSS）
+- ローカルLLM（GPU不要での実行、Ollama、RAG構築、Qwen3 Coder等のコーディングLLM）
+- 各モデルの性能比較と使い分け（Claude vs GPT vs Codex vs OSS）
 
 ### 重要: 生産性・働き方
 - シングルタスク・Deep Workによる集中力の確保

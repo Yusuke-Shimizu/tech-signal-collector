@@ -1,0 +1,45 @@
+name: Daily Trend Collection
+
+on:
+  schedule:
+    - cron: '0 22 * * *'  # 毎日UTC 22:00 = JST 07:00
+  workflow_dispatch:        # 手動トリガー
+
+permissions:
+  contents: write
+
+jobs:
+  collect-trends:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Collect trends
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p \
+            --allowedTools "WebSearch,WebFetch,Bash" \
+            "$(cat .claude/commands/neta-trend-daily.md)"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          DATE=$(TZ=Asia/Tokyo date +%Y%m%d)
+          if [ -f "ideas/daily/${DATE}-trend.md" ]; then
+            git add "ideas/daily/${DATE}-trend.md"
+            git commit -m "${DATE} デイリートレンドを自動収集" || echo "No changes to commit"
+            git push
+          else
+            echo "No trend file generated for ${DATE}"
+            exit 1
+          fi

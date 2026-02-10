@@ -5,7 +5,7 @@ description: "トレンドネタ収集"
 
 # トレンドネタ収集
 
-はてなブックマークIT人気エントリー、Hacker News、AWS What's New、生成AIブログ、Redditの人気記事を収集し、`ideas/daily/YYYYMMDD-trend.md` に保存する。
+はてなブックマークIT人気エントリー、Hacker News、AWS What's New、AWSブログ、生成AIブログ、Redditの人気記事を収集し、`ideas/daily/YYYYMMDD-trend.md` に保存する。
 
 ## 実行手順
 
@@ -38,6 +38,12 @@ description: "トレンドネタ収集"
 - 各エントリーの**タイトル、URL、日付**を取得
 - 特にAI/ML（Bedrock、SageMaker等）、サーバーレス、コンテナ関連に注目
 - **タイトルは日本語に翻訳して出力**
+
+**AWS Blog（日本語）**
+- https://aws.amazon.com/jp/blogs/news/
+- 最新のAWSブログ記事を取得
+- 各エントリーの**タイトル、URL、日付**を取得
+- 特にAI/ML（Bedrock、SageMaker等）、サーバーレス、コンテナ関連に注目
 
 **生成AIブログ**
 - https://simonwillison.net/ - Simon Willison's Weblog（LLM実践・AIツール活用の第一人者）
@@ -101,7 +107,7 @@ AI系（3サブレッド）:
 - AI/LLM関連の議論
 - 議論を呼んでいるトピック（ポイント数が高い）
 
-**AWS What's New**
+**AWS What's New / AWS Blog**
 - AI/ML関連（Bedrock、SageMaker、Generative AI）
 - サーバーレス・コンテナ関連
 - コスト最適化・新リージョン
@@ -127,6 +133,23 @@ AI系（3サブレッド）:
 
 ```markdown
 # トレンドネタ: YYYY-MM-DD
+
+## ★★★ 記事インデックス
+
+全ソースから興味度★★★の記事を抽出し、**通し番号**で一覧化。`/neta-interest-daily` での番号指定に使用。
+
+| # | タイトル | ソース | 指標 | メモ |
+|---|---------|--------|------|------|
+| 1 | [タイトル](URL) | はてブ | XXX users | 一言メモ |
+| 2 | [タイトル](URL) | HN | XXXpt | 一言メモ |
+| 3 | [タイトル](URL) | AWS What's New | YYYY-MM-DD | 一言メモ |
+| 4 | [タイトル](URL) | AWS Blog | YYYY-MM-DD | 一言メモ |
+| 5 | [タイトル](URL) | Simon Willison | - | 一言メモ |
+| 6 | [タイトル](URL) | Anthropic | - | 一言メモ |
+| 7 | [タイトル](URL) | r/subreddit | XXX ups | 一言メモ |
+| ... | ... | ... | ... | ... |
+
+---
 
 ## はてブIT（日本市場）
 
@@ -159,13 +182,13 @@ AI系（3サブレッド）:
 1. [タイトル](HNコメントページURL) (XXXpt) - 概要
 2. ...
 
-## AWS What's New
+## AWS What's New / AWS Blog
 
 ### 注目トピック
 
-| タイトル | 日付 | 興味度 | カテゴリ | メモ |
-|---------|------|--------|---------|------|
-| [タイトル](URL) | YYYY-MM-DD | ★★★/★★/★ | AI・ML/Serverless/Container等 | 発信に活用できるポイント |
+| タイトル | ソース | 日付 | 興味度 | カテゴリ | メモ |
+|---------|--------|------|--------|---------|------|
+| [タイトル](URL) | What's New / Blog | YYYY-MM-DD | ★★★/★★/★ | AI・ML/Serverless/Container等 | 発信に活用できるポイント |
 
 ### 全エントリー
 

@@ -15,35 +15,27 @@ description: "トレンドネタ収集"
 
 ### 1. トレンド情報の収集
 
-以下のサイトから最新のトレンド情報を取得：
+#### 1a. Pythonスクリプトでデータ取得（Reddit, Hacker News, AWS, はてブ）
 
-**日本市場（はてブIT）**
-- https://b.hatena.ne.jp/hotentry/it
-- https://b.hatena.ne.jp/hotentry/it/%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0
-- https://b.hatena.ne.jp/hotentry/it/AI%E3%83%BB%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92
-- https://b.hatena.ne.jp/hotentry/it/%E3%81%AF%E3%81%A6%E3%81%AA%E3%83%96%E3%83%AD%E3%82%B0%EF%BC%88%E3%83%86%E3%82%AF%E3%83%8E%E3%83%AD%E3%82%B8%E3%83%BC%EF%BC%89
-- https://b.hatena.ne.jp/hotentry/it/%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2
-- 各エントリーの**タイトル、元記事URL、ブックマーク数**を必ず取得すること
-- はてブのエントリーページURLではなく、リンク先の元記事URLを抽出
+以下のBashコマンドでデータを一括取得する：
 
-**グローバル（Hacker News）**
-- https://news.ycombinator.com/
-- 各記事の**タイトル、HNコメントページURL（`https://news.ycombinator.com/item?id=XXXXX`形式）、ポイント数**を取得
-- **元記事URLではなくHNのコメントページURLを使用すること**（コメントも確認できるようにするため）
-- **タイトルは日本語に翻訳して出力**
+```bash
+python3 scripts/fetch_trends.py
+```
 
-**AWS What's New**
-- https://aws.amazon.com/new/
-- 最新のAWSサービスアップデート・新機能を取得
-- 各エントリーの**タイトル、URL、日付**を取得
-- 特にAI/ML（Bedrock、SageMaker等）、サーバーレス、コンテナ関連に注目
-- **タイトルは日本語に翻訳して出力**
+- JSON形式で標準出力に結果が出る。進捗は標準エラーに表示される
+- ソースを絞る場合: `python3 scripts/fetch_trends.py reddit hatena` のように指定可能
+- 利用可能ソース: `reddit`, `hn`, `aws`, `hatena`
 
-**AWS Blog（日本語）**
-- https://aws.amazon.com/jp/blogs/news/
-- 最新のAWSブログ記事を取得
-- 各エントリーの**タイトル、URL、日付**を取得
-- 特にAI/ML（Bedrock、SageMaker等）、サーバーレス、コンテナ関連に注目
+**スクリプトが取得するデータ:**
+- **Reddit**: r/OpenAI, r/LocalLLaMA, r/ClaudeCode, r/cscareerquestions, r/productivity の各 hot 10件（タイトル、投票数、コメント数、URL）
+- **Hacker News**: トップ30件（タイトル、スコア、コメント数、HN URL、元記事URL）
+- **AWS**: What's New 20件 + Blog JP 10件（タイトル、URL、日付）
+- **はてブ**: IT/プログラミング/AI・機械学習/はてなブログ(テクノロジー)/エンジニア の5カテゴリRSS（タイトル、URL、ブクマ数、カテゴリ。重複排除済み、ブクマ数降順）
+
+#### 1b. WebFetchで取得（生成AIブログ）
+
+以下はスクリプト非対応のため、WebFetchツールで直接取得する：
 
 **生成AIブログ**
 - https://simonwillison.net/ - Simon Willison's Weblog（LLM実践・AIツール活用の第一人者）
@@ -51,35 +43,12 @@ description: "トレンドネタ収集"
 - 最新3-5記事をチェックし、注目トピックに含める
 - **タイトルは日本語に翻訳して出力**
 
-**Reddit（5サブレッド）**
-- **重要**: WebFetchツールはreddit.comをブロックするため、**Bashツールでcurlコマンドを使用**すること
-- 各サブレッドから `/hot.json?t=day&limit=10` で上位10件を取得
-- **old.reddit.com**を使用（www.reddit.comではない）
-- User-Agentヘッダーを設定: `"User-Agent: neta-trend-collector/1.0 (trend analysis tool)"`
-- 各記事の**タイトル、Redditコメントページの完全URL、投票数（ups）、コメント数**を取得
-- **タイトルは日本語に翻訳して出力**
+#### データ利用時の注意
 
-取得例（Bashツールで実行）:
-```bash
-curl -s -H "User-Agent: neta-trend-collector/1.0 (trend analysis tool)" \
-  "https://old.reddit.com/r/OpenAI/hot.json?t=day&limit=10" | \
-  jq -r '.data.children[] | "\(.data.title)|\(.data.ups)|\(.data.num_comments)|https://www.reddit.com\(.data.permalink)"'
-```
-
-データ構造:
-- `data.children[].data.title`: タイトル
-- `data.children[].data.ups`: 投票数
-- `data.children[].data.num_comments`: コメント数
-- `data.children[].data.permalink`: パス（`https://www.reddit.com` + permalink で完全URL）
-
-AI系（3サブレッド）:
-- r/OpenAI
-- r/LocalLLaMA
-- r/ClaudeCode
-
-キャリア/実践系（2サブレッド）:
-- r/cscareerquestions
-- r/productivity
+- **Hacker News**: スクリプト出力の `hn_url` をリンクに使用（`item?id=`形式）。元記事URLではなくHNコメントページURL
+- **Reddit**: スクリプト出力の `url` をリンクに使用（`https://www.reddit.com/r/...`形式の完全URL）
+- **はてブ**: スクリプト出力の `url` が元記事URL（はてブページURLではない）
+- **英語タイトルは日本語に翻訳して出力**（HN, Reddit, AWS What's New, 生成AIブログ）
 
 ### 2. 分析
 
@@ -230,16 +199,10 @@ AI系（3サブレッド）:
 
 ## 注意事項
 
-- WebFetchツールを使用して情報を取得
+- **データ取得は `python3 scripts/fetch_trends.py` を最初に実行**し、そのJSON出力をもとに分析・出力する
+- 生成AIブログ（Simon Willison, Anthropic）のみWebFetchツールで取得
 - **すべての記事にURLリンクを必ず含める（リンクなしは不可）**
-- **はてブは元記事のURLを必ず取得**（はてブページURLではなく）
-- **Hacker NewsはHNコメントページURL（`item?id=`形式）を使用**（元記事URLではなく）
-- **Hacker Newsのタイトルは日本語に翻訳**
-- **RedditはRedditコメントページの完全URL（`https://www.reddit.com/r/subreddit/comments/...`形式）を使用**
-- **Redditのタイトルは日本語に翻訳**
-- **AWS What's Newのタイトルは日本語に翻訳**
-- **生成AIブログのタイトルは日本語に翻訳**
-- Reddit APIレート制限に注意（1分あたり60リクエスト程度）
+- **英語タイトルは日本語に翻訳**（HN, Reddit, AWS What's New, 生成AIブログ）
 - 投票数（ups）/コメント数が高い記事を優先
 - ポイント数/ブックマーク数が高い記事は特に注目
 - 出力ファイルのYYYYMMDDは実行日の日付を使用

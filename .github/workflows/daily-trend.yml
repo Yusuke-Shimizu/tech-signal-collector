@@ -27,7 +27,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           # YAML frontmatter(---で囲まれた部分)を除去してプロンプトとして渡す
-          PROMPT=$(sed '/^---$/,/^---$/d' .claude/commands/neta-trend-daily.md)
+          PROMPT=$(sed '/^---$/,/^---$/d' .claude/skills/neta-trend-daily/SKILL.md)
           claude -p \
             --allowedTools "WebSearch,WebFetch,Bash" \
             "$PROMPT"

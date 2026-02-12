@@ -28,9 +28,8 @@ jobs:
         run: |
           # YAML frontmatter(---で囲まれた部分)を除去してプロンプトとして渡す
           PROMPT=$(sed '/^---$/,/^---$/d' .claude/skills/neta-trend-daily/SKILL.md)
-          claude -p \
-            --allowedTools "WebSearch,WebFetch,Bash" \
-            "$PROMPT"
+          echo "$PROMPT" | claude -p \
+            --allowedTools "WebSearch,WebFetch,Bash"
 
       - name: Commit and push
         run: |

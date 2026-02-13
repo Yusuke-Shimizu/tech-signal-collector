@@ -15,21 +15,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code
-
-      - name: Collect trends
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - name: Read skill prompt
+        id: skill
         run: |
           # YAML frontmatter(---で囲まれた部分)を除去してプロンプトとして渡す
           PROMPT=$(sed '/^---$/,/^---$/d' .claude/skills/neta-trend-daily/SKILL.md)
-          echo "$PROMPT" | claude -p \
-            --allowedTools "WebSearch,WebFetch,Bash"
+          {
+            echo "prompt<<SKILL_EOF"
+            echo "$PROMPT"
+            echo "SKILL_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Collect trends
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: ${{ steps.skill.outputs.prompt }}
+          claude_args: "--allowedTools WebSearch,WebFetch,Bash"
 
       - name: Commit and push
         run: |

@@ -31,8 +31,7 @@ jobs:
         uses: anthropics/claude-code-action@v1.0.53
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          prompt: ${{ steps.skill.outputs.prompt }}
-          allowed_tools: "WebSearch,WebFetch,Bash(python3 *),Bash(git add *),Bash(git commit *)"
+          prompt: "Hello, respond with just 'OK'"
 
       - name: Commit and push
         run: |

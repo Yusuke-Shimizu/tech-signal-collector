@@ -28,7 +28,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Collect trends
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@v1.0.51
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: ${{ steps.skill.outputs.prompt }}

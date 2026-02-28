@@ -32,7 +32,7 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: ${{ steps.skill.outputs.prompt }}
-          claude_args: "--allowedTools WebSearch,WebFetch,Bash"
+          claude_args: "--allowedTools Read,Write,Bash,WebFetch,WebSearch"
 
       - name: Commit and push
         run: |

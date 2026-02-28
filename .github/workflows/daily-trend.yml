@@ -35,9 +35,12 @@ jobs:
           claude_args: "--allowedTools Read,Write,Bash,WebFetch,WebSearch"
 
       - name: Commit and push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           DATE=$(TZ=Asia/Tokyo date +%Y%m%d)
           if [ -f "ideas/daily/${DATE}-trend.md" ]; then
             git add "ideas/daily/${DATE}-trend.md"

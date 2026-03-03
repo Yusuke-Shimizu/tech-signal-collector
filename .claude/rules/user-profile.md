@@ -5,8 +5,10 @@
 ### 最重要: 生成AI/LLMの実践活用
 - コーディングエージェント（Claude Code、Codex等）の使いこなし・ワークフロー設計
 - **Claude Code Agent Teams**: マルチエージェント構成、役割分離、オーケストレーション実践
+- **Claude Codeとのコラボフレームワーク**: PLAN/SPEC/TODO/KNOWLEDGE.mdの4ドキュメント体制（音声入力＋仕様壁打ち）
 - エージェント設計パターン、マルチエージェント、並列エージェント
 - ローカルLLM（GPU不要での実行、Ollama、RAG構築、Qwen3 Coder等のコーディングLLM）
+- **エッジAI音声認識**（Moonshine Voice等）: GPU不要でWhisperを超える精度。ローカルLLMと組み合わせた完全オフラインパイプラインが現実的選択肢に
 - 各モデルの性能比較と使い分け（Claude vs GPT vs Codex vs OSS）
 
 ### 重要: 生産性・働き方

@@ -1,8 +1,10 @@
 name: Daily Trend Collection
 
 on:
-  schedule:
-    - cron: '0 22 * * *'  # 毎日UTC 22:00 = JST 07:00
+  # 定期実行は停止中（2026-11-23以降Claude Code呼び出しで失敗、利用終了のため）
+  # 再開する場合は以下を戻す:
+  # schedule:
+  #   - cron: '0 22 * * *'  # 毎日UTC 22:00 = JST 07:00
   workflow_dispatch:        # 手動トリガー
 
 permissions:
